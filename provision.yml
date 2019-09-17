@@ -1,0 +1,7 @@
+- hosts:
+    - local
+  become: true
+  remote_user: "{{ process_execution_user }}"
+  gather_facts: no
+  roles:
+    - app.docker-install

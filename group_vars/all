@@ -1,0 +1,12 @@
+docker_version : "18.09.2"
+
+# Dir information
+project_dir: "{{user_home}}/ansible-playbook"
+backend_dir: "{{project_dir}}/backend"
+frontend_dir: "{{project_dir}}/frontend"
+mysql_dir: "{{user_home}}/mysql"
+
+# Service options.
+docker_service_state: started
+docker_service_enabled: yes
+docker_restart_handler_state: restarted

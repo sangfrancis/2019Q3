@@ -1,0 +1,7 @@
+- hosts:
+    - local
+  remote_user: "{{ process_execution_user }}"
+  become: true
+  roles:
+    - app.nginx-install
+

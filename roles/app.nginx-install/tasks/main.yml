@@ -1,0 +1,45 @@
+---
+    - name: ensure nginx is at the latest version
+      yum:
+        name:
+          - nginx
+        state: latest
+    - name: start nginx
+      service:
+          name: nginx
+          state: started
+    - name: Changing permission
+      file: dest=/home/vagrant mode=755
+    - name: Set up nginx config directory
+      file: path=/etc/nginx/{{ item }}
+            state=directory
+      with_items:
+        - sites-available
+        - sites-enabled
+    - name: copy the nginx config file and restart nginx
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: "{{process_execution_user }}"
+        group: "{{process_execution_user }}"
+      with_items:
+        - { src: "frontend.conf", dest: "/etc/nginx/sites-available/frontend.conf" }
+    - name: config nginx.conf
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: "{{process_execution_user }}"
+        group: "{{process_execution_user }}"
+      with_items:
+        - { src: "nginx.conf", dest: "/etc/nginx/nginx.conf" }
+    - name: create symlink
+      file:
+        src: /etc/nginx/sites-available/frontend.conf
+        dest: /etc/nginx/sites-enabled/frontend.conf
+        state: link
+      become: yes
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+      become: yes 

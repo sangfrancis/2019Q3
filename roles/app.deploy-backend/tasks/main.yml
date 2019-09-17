@@ -1,0 +1,53 @@
+---
+- name: copy docker_compose file
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ process_execution_user  }}"
+    group: "{{ process_execution_user}}"
+  with_items:
+    - { src: "docker-compose.yml", dest: "{{ backend_dir }}/docker-compose.yml" }
+
+- name: copy dockerfile file
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ process_execution_user  }}"
+    group: "{{ process_execution_user}}"
+  with_items:
+    - { src: "dockerfile", dest: "{{ backend_dir }}/dockerfile" }
+
+- name: copy env file
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{process_execution_user }}"
+    group: "{{process_execution_user }}"
+  with_items:
+    - { src: ".env.j2", dest: "{{ backend_dir }}/.env" }
+
+- name: copy site config file
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ process_execution_user }}"
+    group: "{{ process_execution_user }}"
+  with_items:
+    - { src: "site.conf", dest: "{{ backend_dir }}/site.conf" }
+
+- name: copy php config file
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ process_execution_user }}"
+    group: "{{ process_execution_user }}"
+  with_items:
+    - { src: "php.ini", dest: "{{ backend_dir }}/php.ini" }
+
+- name: docker-compose restart
+  command: "{{ item }}"
+  args:
+    chdir: "{{ backend_dir }}"
+  with_items:
+    - "docker-compose down"
+    - "docker-compose up -d"
